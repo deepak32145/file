@@ -1,0 +1,22 @@
+<div
+  class="drop-area"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+>
+  <p>Drag and drop files here</p>
+  <input
+    type="file"
+    multiple
+    (change)="onFileSelected($event)"
+    #fileInput
+    style="display: none"
+  />
+  <button (click)="fileInput.click()">Select Files</button>
+</div>
+<button (click)="uploadFiles()">Upload</button>
+<div *ngFor="let file of files; let i = index">
+  <div>{{ file.name }}</div>
+  <mat-progress-bar mode="determinate" [value]="progress[i]"></mat-progress-bar>
+  <button (click)="removeFile(i)">Remove</button>
+</div>

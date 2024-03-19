@@ -2,11 +2,11 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: 'app-file-upload-component',
+  templateUrl: './file-upload-component.component.html',
+  styleUrls: ['./file-upload-component.component.css'],
 })
-export class AppComponent {
+export class FileUploadComponentComponent {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   files: File[] = [];
   progress: number[] = [];
@@ -15,10 +15,35 @@ export class AppComponent {
 
   onFileSelected(event: any) {
     const files: FileList = event.target.files;
+    this.addFiles(files);
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const files = event.dataTransfer?.files;
+    if (files) {
+      this.addFiles(files);
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  addFiles(files: FileList) {
     for (let i = 0; i < files.length; i++) {
       this.files.push(files.item(i)!);
       this.progress.push(0);
     }
+  }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
+    this.progress.splice(index, 1);
   }
 
   uploadFiles() {
@@ -43,15 +68,5 @@ export class AppComponent {
           }
         });
     });
-  }
-  clearFiles() {
-    this.files = [];
-    this.progress = [];
-    this.fileInput.nativeElement.value = '';
-  }
-
-  removeFile(index: number) {
-    this.files.splice(index, 1);
-    this.progress.splice(index, 1);
   }
 }
